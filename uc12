@@ -1,0 +1,55 @@
+import java.util.Deque;
+import java.util.LinkedList;
+import java.util.Scanner;
+import java.util.Stack;
+
+interface PalindromeStrategy {
+    boolean checkPalindrome(String input);
+}
+
+class StackStrategy implements PalindromeStrategy {
+    @Override
+    public boolean checkPalindrome(String input) {
+        Stack<Character> stack = new Stack<>();
+        for (char ch : input.toCharArray()) stack.push(ch);
+        for (char ch : input.toCharArray()) {
+            if (stack.pop() != ch) return false;
+        }
+        return true;
+    }
+}
+
+class DequeStrategy implements PalindromeStrategy {
+    @Override
+    public boolean checkPalindrome(String input) {
+        Deque<Character> deque = new LinkedList<>();
+        for (char ch : input.toCharArray()) deque.addLast(ch);
+        while (deque.size() > 1) {
+            if (deque.removeFirst() != deque.removeLast()) return false;
+        }
+        return true;
+    }
+}
+
+class PalindromeContext {
+    private PalindromeStrategy strategy;
+    public PalindromeContext(PalindromeStrategy strategy) { this.strategy = strategy; }
+    public boolean executeStrategy(String input) { return strategy.checkPalindrome(input); }
+}
+
+public class PalindromeCheckerUC12 {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print("Enter a string: ");
+        String input = scanner.nextLine();
+
+        PalindromeStrategy strategy = new StackStrategy(); // Or use new DequeStrategy()
+        PalindromeContext context = new PalindromeContext(strategy);
+
+        if (context.executeStrategy(input)) System.out.println("Palindrome");
+        else System.out.println("Not Palindrome");
+
+        scanner.close();
+    }
+}
