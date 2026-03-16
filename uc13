@@ -1,0 +1,60 @@
+import java.util.Deque;
+import java.util.LinkedList;
+import java.util.Stack;
+import java.util.Scanner;
+
+public class PalindromeCheckerUC13 {
+
+    public static boolean twoPointer(String input) {
+        int start = 0, end = input.length() - 1;
+        while (start < end) {
+            if (input.charAt(start) != input.charAt(end)) return false;
+            start++;
+            end--;
+        }
+        return true;
+    }
+
+    public static boolean stackApproach(String input) {
+        Stack<Character> stack = new Stack<>();
+        for (char ch : input.toCharArray()) stack.push(ch);
+        for (char ch : input.toCharArray()) {
+            if (stack.pop() != ch) return false;
+        }
+        return true;
+    }
+
+    public static boolean dequeApproach(String input) {
+        Deque<Character> deque = new LinkedList<>();
+        for (char ch : input.toCharArray()) deque.addLast(ch);
+        while (deque.size() > 1) {
+            if (deque.removeFirst() != deque.removeLast()) return false;
+        }
+        return true;
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter a string: ");
+        String input = scanner.nextLine();
+
+        long start, end;
+
+        start = System.nanoTime();
+        boolean result1 = twoPointer(input);
+        end = System.nanoTime();
+        System.out.println("Two-Pointer Result: " + result1 + " | Time: " + (end - start) + " ns");
+
+        start = System.nanoTime();
+        boolean result2 = stackApproach(input);
+        end = System.nanoTime();
+        System.out.println("Stack Result: " + result2 + " | Time: " + (end - start) + " ns");
+
+        start = System.nanoTime();
+        boolean result3 = dequeApproach(input);
+        end = System.nanoTime();
+        System.out.println("Deque Result: " + result3 + " | Time: " + (end - start) + " ns");
+
+        scanner.close();
+    }
+}
